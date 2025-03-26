@@ -8,8 +8,23 @@
     ],
     "routes": [
       {
-        "src": "/proxy/(.*)",
-        "dest": "/index.js"
+        "src": "/(.*)",
+        "dest": "index.js"
+      }
+    ],
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [
+          {
+            "key": "x-forwarded-for",
+            "value": ""
+          },
+          {
+            "key": "x-real-ip",
+            "value": ""
+          }
+        ]
       }
     ]
   }

@@ -9,6 +9,16 @@ const removeHeaders = [
     'user-agent',
     'x-forwarded',
     'x-vercel',
+    'x-real-ip',
+    'x-forwarded-for',
+    'x-forwarded-proto',
+    'x-forwarded-host',
+    'via',
+    'cf-connecting-ip',
+    'cf-ipcountry',
+    'true-client-ip',
+    'cf-ray',
+    'cf-visitor'
 ]
 
 // 配置代理中间件
