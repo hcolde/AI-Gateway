@@ -7,8 +7,8 @@ const removeHeaders = [
     'accept-language',
     'forwarded',
     'user-agent',
-    'x-amzn-trace-id',
-    'x-forwarded-host',
+    'x-forwarded',
+    'x-vercel',
 ]
 
 // 配置代理中间件
@@ -38,7 +38,7 @@ app.use('/proxy', createProxyMiddleware({
     on: {
         proxyReq: (proxyReq, req, res) => {
             for (const header of Object.keys(proxyReq.getHeaders())) {
-                if (header.toLowerCase().startsWith('x-vercel') || removeHeaders.includes(header.toLowerCase())) {
+                if (removeHeaders.some(h => header.toLowerCase().startsWith(h.toLowerCase()))) {
                     proxyReq.removeHeader(header);
                 }
             }
