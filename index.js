@@ -38,11 +38,7 @@ app.use('/proxy', createProxyMiddleware({
     target: 'https://httpbin.org', // 默认目标
     changeOrigin: true,
     xfwd: false,
-    secure: false,
-    ws: true,
-    agent: new net.Agent({
-        localAddress: '0.0.0.0'
-    }),
+    secure: true,
     router: (req) => {
         const path = req.path;
         const service = path.split('/')[1];
