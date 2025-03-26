@@ -30,7 +30,8 @@ const removeHeaders = [
     'cf-ipcountry',
     'true-client-ip',
     'cf-ray',
-    'cf-visitor'
+    'cf-visitor',
+    'X-Proxy-Authorization',
 ]
 
 // 配置代理中间件
