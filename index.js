@@ -5,6 +5,7 @@ const app = express();
 
 // 配置代理中间件
 app.use('/proxy', createProxyMiddleware({
+    target: 'http://localhost:3000', // 默认目标，实际会被router覆盖
     changeOrigin: true,
     router: {
         'openai': 'https://api.openai.com',
