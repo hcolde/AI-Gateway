@@ -15,6 +15,7 @@ const removeHeaders = [
 app.use('/proxy', createProxyMiddleware({
     target: 'https://httpbin.org', // 默认目标
     changeOrigin: true,
+    xfwd: false,
     router: (req) => {
         const path = req.path;
         const service = path.split('/')[1];
