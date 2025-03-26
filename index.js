@@ -5,13 +5,18 @@ const app = express();
 
 // 配置代理中间件
 app.use('/proxy', createProxyMiddleware({
-    target: 'http://localhost:3000', // 默认目标，实际会被router覆盖
+    target: 'https://httpbin.org', // 默认目标
     changeOrigin: true,
-    router: {
-        'openai': 'https://api.openai.com',
-        'anthropic': 'https://api.anthropic.com',
-        'ipinfo': 'https://ipinfo.in',
-        'test': 'https://httpbin.org/anything',
+    router: (req) => {
+        const path = req.path;
+        const service = path.split('/')[1];
+        const routes = {
+            'openai': 'https://api.openai.com',
+            'anthropic': 'https://api.anthropic.com',
+            'ipinfo': 'https://ipinfo.in',
+            'test': 'https://httpbin.org/anything'
+        };
+        return routes[service] || 'https://httpbin.org';
     },
     pathRewrite: (path, req) => {
         // Remove /proxy/<service> from the path
