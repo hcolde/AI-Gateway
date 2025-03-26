@@ -4,11 +4,11 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const app = express();
 
 const removeHeaders = [
-    'Accept-Language',
-    'Forwarded',
-    'User-Agent',
-    'X-Amzn-Trace-Id',
-    'X-Forwarded-Host',
+    'accept-language',
+    'forwarded',
+    'user-agent',
+    'x-amzn-trace-id',
+    'x-forwarded-host',
 ]
 
 // 配置代理中间件
@@ -37,20 +37,10 @@ app.use('/proxy', createProxyMiddleware({
     on: {
         proxyReq: (proxyReq, req, res) => {
             for (const header of Object.keys(proxyReq.getHeaders())) {
-                if (header.startsWith('X-Vercel') || removeHeaders.includes(header)) {
+                if (header.toLowerCase().startsWith('x-vercel') || removeHeaders.includes(header.toLowerCase())) {
                     proxyReq.removeHeader(header);
                 }
             }
-
-            // proxyReq.removeHeader('x-vercel-forwarded-for');
-            // proxyReq.removeHeader('x-vercel-ip-continent');
-            // proxyReq.removeHeader('x-vercel-ip-country');
-            // proxyReq.removeHeader('x-vercel-ip-country-region');
-            // proxyReq.removeHeader('x-vercel-ip-city');
-            // proxyReq.removeHeader('x-vercel-ip-latitude');
-            // proxyReq.removeHeader('x-vercel-ip-longitude');
-            // proxyReq.removeHeader('x-vercel-ip-timezone');
-            // proxyReq.removeHeader('x-vercel-ip-postal-code');
         }
     }
 }));
