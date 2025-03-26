@@ -40,8 +40,8 @@ app.use('/proxy', createProxyMiddleware({
     xfwd: false,
     secure: true,
     router: (req) => {
-        const path = req.path;
-        const service = path.split('/')[1];
+        const segments = req.path.split('/').filter(Boolean);
+        const service = segments[0];
         const routes = {
             'openai': 'https://api.openai.com',
             'anthropic': 'https://api.anthropic.com',
@@ -51,12 +51,17 @@ app.use('/proxy', createProxyMiddleware({
         return routes[service] || 'https://httpbin.org';
     },
     pathRewrite: (path, req) => {
-        // Remove /proxy/<service> from the path
-        const segments = path.split('/');
-        if (segments.length > 2) {
-            return '/' + segments.slice(2).join('/');
+        const segments = path.split('/').filter(Boolean);
+        
+        // 如果是 test 路径，直接返回空路径，因为目标URL已经包含了 /anything
+        if (segments[0] === 'test') {
+            return '';
         }
-        return path;
+        
+        // 其他服务的处理逻辑
+        if (segments.length <= 1) return '/';
+        const newPath = '/' + segments.slice(1).join('/');
+        return path.endsWith('/') ? newPath + '/' : newPath;
     },
     on: {
         proxyReq: (proxyReq, req, res) => {
