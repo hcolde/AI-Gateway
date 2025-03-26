@@ -1,7 +1,19 @@
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
+const net = require('net');
 
 const app = express();
+
+// 添加前置中间件来清理请求
+app.use((req, res, next) => {
+    // 清除所有可能暴露IP的头部
+    req.connection.remoteAddress = '0.0.0.0';
+    req.socket.remoteAddress = '0.0.0.0';
+    if (req.connection.socket) {
+        req.connection.socket.remoteAddress = '0.0.0.0';
+    }
+    next();
+});
 
 const removeHeaders = [
     'accept-language',
@@ -26,6 +38,11 @@ app.use('/proxy', createProxyMiddleware({
     target: 'https://httpbin.org', // 默认目标
     changeOrigin: true,
     xfwd: false,
+    secure: false,
+    ws: true,
+    agent: new net.Agent({
+        localAddress: '0.0.0.0'
+    }),
     router: (req) => {
         const path = req.path;
         const service = path.split('/')[1];
